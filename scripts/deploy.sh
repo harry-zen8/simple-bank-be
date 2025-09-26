@@ -17,7 +17,7 @@ echo "Docker Username: $DOCKER_USERNAME"
 echo "Namespace: $NAMESPACE"
 
 # Set Docker image name
-DOCKER_IMAGE_NAME="docker.io/$DOCKER_USERNAME/simple-bank:$IMAGE_TAG"
+DOCKER_IMAGE_NAME="docker.io/$DOCKER_USERNAME/simple-bank-be:$IMAGE_TAG"
 echo "Using Docker image: $DOCKER_IMAGE_NAME"
 
 # Create namespace if it doesn't exist

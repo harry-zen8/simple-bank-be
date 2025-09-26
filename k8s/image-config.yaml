@@ -11,7 +11,7 @@ data:
   DOCKER_USERNAME: "your-username"
   
   # Image name (without username)
-  IMAGE_NAME: "simple-bank"
+  IMAGE_NAME: "simple-bank-be"
   
   # Default tag
   DEFAULT_TAG: "latest"
