@@ -13,21 +13,6 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_PASSWORD: password
-          POSTGRES_USER: user
-          POSTGRES_DB: banking_db
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
 
     steps:
     - name: Checkout code
@@ -48,10 +33,6 @@ jobs:
 
     - name: Run tests
       run: mvn clean test
-      env:
-        SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/banking_db
-        SPRING_DATASOURCE_USERNAME: user
-        SPRING_DATASOURCE_PASSWORD: password
 
     - name: Generate test report
       uses: dorny/test-reporter@v1
