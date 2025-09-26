@@ -1,3 +1,4 @@
 target
 .specstory
 .idea
+k8s/deployment-generated.yaml

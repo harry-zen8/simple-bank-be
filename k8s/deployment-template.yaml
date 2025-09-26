@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-bank-app
+  namespace: simple-bank
+  labels:
+    app: simple-bank
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: simple-bank
+  template:
+    metadata:
+      labels:
+        app: simple-bank
+    spec:
+      containers:
+      - name: simple-bank
+        image: ${DOCKER_IMAGE_NAME}
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: simple-bank-config
+        - secretRef:
+            name: simple-bank-secret
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        startupProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 10

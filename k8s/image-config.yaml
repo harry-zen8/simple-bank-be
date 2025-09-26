@@ -1,0 +1,21 @@
+# Docker Image Configuration
+# Update this file to change the Docker image name and tag for all environments
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: image-config
+  namespace: simple-bank
+data:
+  # Docker Hub username - UPDATE THIS
+  DOCKER_USERNAME: "your-username"
+  
+  # Image name (without username)
+  IMAGE_NAME: "simple-bank"
+  
+  # Default tag
+  DEFAULT_TAG: "latest"
+  
+  # Environment-specific tags
+  PRODUCTION_TAG: "stable"
+  STAGING_TAG: "develop"

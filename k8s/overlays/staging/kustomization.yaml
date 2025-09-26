@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: simple-bank-staging
+
+resources:
+- ../../
+
+namePrefix: staging-
+
+patchesStrategicMerge:
+- deployment-patch.yaml
+
+# Image configuration is handled by the base kustomization
+# and deployment script using image-config ConfigMap
