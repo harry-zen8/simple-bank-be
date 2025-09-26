@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="2" author="system" context="!test">
+        <!-- Customer 1: Gold member -->
+        <insert tableName="customers">
+            <column name="id" value="1"/>
+            <column name="name" value="John Doe"/>
+            <column name="email" value="john.doe@example.com"/>
+            <column name="phone" value="111-222-3333"/>
+            <column name="customer_level" value="GOLD"/>
+        </insert>
+        <insert tableName="accounts">
+            <column name="id" value="1"/>
+            <column name="cust_id" value="1"/>
+            <column name="account_type" value="SAVINGS"/>
+            <column name="balance" value="15000.00"/>
+        </insert>
+
+        <!-- Customer 2: Silver member -->
+        <insert tableName="customers">
+            <column name="id" value="2"/>
+            <column name="name" value="Jane Smith"/>
+            <column name="email" value="jane.smith@example.com"/>
+            <column name="phone" value="444-555-6666"/>
+            <column name="customer_level" value="SILVER"/>
+        </insert>
+        <insert tableName="accounts">
+            <column name="id" value="2"/>
+            <column name="cust_id" value="2"/>
+            <column name="account_type" value="CHECKING"/>
+            <column name="balance" value="2500.50"/>
+        </insert>
+
+        <!-- Customer 3: Bronze member -->
+        <insert tableName="customers">
+            <column name="id" value="3"/>
+            <column name="name" value="Sam Brown"/>
+            <column name="email" value="sam.brown@example.com"/>
+            <column name="phone" value="777-888-9999"/>
+            <column name="customer_level" value="BRONZE"/>
+        </insert>
+        <insert tableName="accounts">
+            <column name="id" value="3"/>
+            <column name="cust_id" value="3"/>
+            <column name="account_type" value="SAVINGS"/>
+            <column name="balance" value="500.75"/>
+        </insert>
+        
+        <sql>
+            -- Manually update the sequence for the customers table since we inserted with explicit IDs
+            -- This is another smell/bad practice when using serial columns, but necessary here.
+            SELECT setval('customers_id_seq', (SELECT MAX(id) FROM customers));
+            SELECT setval('accounts_id_seq', (SELECT MAX(id) FROM accounts));
+            SELECT setval('transactions_id_seq', (SELECT COALESCE(MAX(id), 1) FROM transactions), false);
+        </sql>
+
+    </changeSet>
+</databaseChangeLog> 

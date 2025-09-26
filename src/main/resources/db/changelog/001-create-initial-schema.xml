@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="1" author="system">
+        <createTable tableName="customers">
+            <column name="id" type="BIGSERIAL" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="phone" type="VARCHAR(255)"/>
+            <column name="customer_level" type="VARCHAR(255)"/>
+        </createTable>
+
+        <createTable tableName="accounts">
+            <column name="id" type="BIGSERIAL" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="balance" type="NUMERIC(38, 2)"/>
+            <column name="account_type" type="VARCHAR(255)"/>
+            <column name="cust_id" type="BIGINT"/>
+        </createTable>
+
+        <createTable tableName="transactions">
+            <column name="id" type="BIGSERIAL" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="value" type="NUMERIC(38, 2)"/>
+            <column name="date" type="TIMESTAMP"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="type" type="VARCHAR(255)"/>
+            <column name="from_account" type="BIGINT"/>
+            <column name="to_account" type="BIGINT"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="accounts"
+                                 baseColumnNames="cust_id"
+                                 constraintName="fk_account_customer"
+                                 referencedTableName="customers"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog> 
