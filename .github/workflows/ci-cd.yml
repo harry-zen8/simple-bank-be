@@ -133,22 +133,22 @@ jobs:
         echo "Using Docker image: $DOCKER_IMAGE_NAME"
         
         # Create namespace if it doesn't exist
-        kubectl create namespace simple-bank --dry-run=client -o yaml | kubectl apply -f --validate=false
+        kubectl create namespace simple-bank --dry-run=client -o yaml | kubectl apply --validate=false -f -
         
         # Generate deployment from template
         export DOCKER_IMAGE_NAME
         envsubst < k8s/deployment-template.yaml > k8s/deployment-generated.yaml
         
         # Apply Kubernetes manifests
-        kubectl apply -f k8s/namespace.yaml --validate=false
-        kubectl apply -f k8s/configmap.yaml --validate=false
-        kubectl apply -f k8s/secret.yaml --validate=false
-        kubectl apply -f k8s/postgres-deployment.yaml --validate=false
-        kubectl apply -f k8s/postgres-service.yaml --validate=false
-        kubectl apply -f k8s/service.yaml --validate=false
-        kubectl apply -f k8s/ingress.yaml --validate=false
-        kubectl apply -f k8s/ingress-controller.yaml --validate=false
-        kubectl apply -f k8s/deployment-generated.yaml --validate=false
+        kubectl apply --validate=false -f k8s/namespace.yaml
+        kubectl apply --validate=false -f k8s/configmap.yaml
+        kubectl apply --validate=false -f k8s/secret.yaml
+        kubectl apply --validate=false -f k8s/postgres-deployment.yaml
+        kubectl apply --validate=false -f k8s/postgres-service.yaml
+        kubectl apply --validate=false -f k8s/service.yaml
+        kubectl apply --validate=false -f k8s/ingress.yaml
+        kubectl apply --validate=false -f k8s/ingress-controller.yaml
+        kubectl apply --validate=false -f k8s/deployment-generated.yaml
         
         # Wait for ingress controller to be ready
         echo "Waiting for ingress controller to be ready..."
