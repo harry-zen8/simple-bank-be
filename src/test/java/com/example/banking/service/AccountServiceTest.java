@@ -127,7 +127,7 @@ public class AccountServiceTest {
 
         assertEquals(true, result);
         assertEquals(new BigDecimal("80"), fromAccount.getBalance());
-        assertEquals(new BigDecimal("71"), toAccount.getBalance());
+        assertEquals(new BigDecimal("70"), toAccount.getBalance());
     }
 
     @Test
