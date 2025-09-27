@@ -1,4 +1,8 @@
 target
 .specstory
 .idea
+# Generated deployment files
 k8s/deployment-generated.yaml
+k8s/deployment-latest.yaml
+# ngrok configuration (contains sensitive tokens)
+ngrok.yml
