@@ -101,7 +101,7 @@ public class AccountServiceTest {
         when(transactionRepository.findByAccountId(1L)).thenReturn(List.of(transaction1, transaction2));
 
         List<Transaction> transactions = accountService.getTransactions(1L);
-        assertEquals(2, transactions.size());
+        assertEquals(20, transactions.size());
     }
 
     @Test
