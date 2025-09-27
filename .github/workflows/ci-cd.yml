@@ -109,13 +109,41 @@ jobs:
 
     - name: Configure kubectl
       run: |
-        echo "${{ secrets.KUBECONFIG }}" | base64 -d > kubeconfig
+        echo "=== Decoding and validating kubeconfig ==="
+        
+        # Check if KUBECONFIG secret exists
+        if [ -z "${{ secrets.KUBECONFIG }}" ]; then
+          echo "❌ KUBECONFIG secret is not set in GitHub repository secrets"
+          echo "Please add the base64 encoded kubeconfig as a secret named 'KUBECONFIG'"
+          exit 1
+        fi
+        
+        # Decode kubeconfig with error handling
+        if ! echo "${{ secrets.KUBECONFIG }}" | base64 -d > kubeconfig 2>/dev/null; then
+          echo "❌ Failed to decode base64 kubeconfig"
+          echo "Please ensure the KUBECONFIG secret contains valid base64 encoded data"
+          exit 1
+        fi
+        
+        # Validate kubeconfig format
+        if ! head -1 kubeconfig | grep -q "apiVersion:"; then
+          echo "❌ Invalid kubeconfig format - missing apiVersion"
+          echo "Kubeconfig content (first 5 lines):"
+          head -5 kubeconfig
+          exit 1
+        fi
+        
         export KUBECONFIG=kubeconfig
+        echo "✅ Kubeconfig decoded and validated successfully"
+        
         echo "=== Kubeconfig Info ==="
         kubectl config current-context || echo "Failed to get current context"
+        kubectl config view --minify --flatten || echo "Failed to view config"
+        
         echo "=== Testing cluster connectivity ==="
-        kubectl cluster-info --request-timeout=10s || echo "Cluster info failed"
-        kubectl get nodes --request-timeout=10s || echo "Get nodes failed"
+        kubectl cluster-info --request-timeout=30s || echo "Cluster info failed"
+        kubectl get nodes --request-timeout=30s || echo "Get nodes failed"
+        
         echo "=== Kubeconfig file content (first 10 lines) ==="
         head -10 kubeconfig || echo "Failed to read kubeconfig"
 
