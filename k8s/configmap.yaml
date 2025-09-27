@@ -11,6 +11,3 @@ data:
   SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: "org.hibernate.dialect.PostgreSQLDialect"
   MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "health,info,metrics"
   MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS: "always"
-  # Enable Liquibase for database migrations
-  SPRING_LIQUIBASE_ENABLED: "true"
-  SPRING_LIQUIBASE_CHANGE_LOG: "classpath:db/changelog/db.changelog-master.xml"

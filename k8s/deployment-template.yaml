@@ -15,6 +15,37 @@ spec:
       labels:
         app: simple-bank
     spec:
+      initContainers:
+      - name: liquibase-migration
+        image: liquibase/liquibase:latest
+        env:
+        - name: LIQUIBASE_URL
+          value: "jdbc:postgresql://postgres-service:5432/banking_db"
+        - name: LIQUIBASE_USERNAME
+          value: "user"
+        - name: LIQUIBASE_PASSWORD
+          value: "password"
+        - name: LIQUIBASE_CHANGELOG
+          value: "changelog/db.changelog-master.xml"
+        command:
+        - /bin/bash
+        - -c
+        - |
+          echo "Waiting for PostgreSQL to be ready..."
+          until pg_isready -h postgres-service -p 5432 -U user; do
+            echo "PostgreSQL is unavailable - sleeping"
+            sleep 2
+          done
+          echo "PostgreSQL is ready - running migrations"
+          liquibase --url="$LIQUIBASE_URL" \
+                    --username="$LIQUIBASE_USERNAME" \
+                    --password="$LIQUIBASE_PASSWORD" \
+                    --changeLogFile="$LIQUIBASE_CHANGELOG" \
+                    --searchPath=/liquibase/changelog \
+                    update
+        volumeMounts:
+        - name: liquibase-changelog
+          mountPath: /liquibase/changelog
       containers:
       - name: simple-bank
         image: ${DOCKER_IMAGE_NAME}
@@ -56,3 +87,7 @@ spec:
           periodSeconds: 5
           timeoutSeconds: 3
           failureThreshold: 10
+      volumes:
+      - name: liquibase-changelog
+        configMap:
+          name: liquibase-changelog
