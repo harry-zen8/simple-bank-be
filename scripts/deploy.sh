@@ -7,8 +7,26 @@ set -e
 
 ENVIRONMENT=${1:-base}
 IMAGE_TAG=${2:-latest}
-DOCKER_USERNAME=${3:-${DOCKER_USERNAME:-"your-username"}}
 NAMESPACE="simple-bank"
+
+# Get DOCKER_USERNAME from image-config.yaml if not provided as parameter
+if [ -n "$3" ]; then
+    DOCKER_USERNAME=$3
+else
+    # Try to get from environment variable first
+    if [ -n "$DOCKER_USERNAME" ]; then
+        echo "Using DOCKER_USERNAME from environment: $DOCKER_USERNAME"
+    else
+        # Extract from image-config.yaml
+        DOCKER_USERNAME=$(grep "DOCKER_USERNAME:" k8s/image-config.yaml | sed 's/.*DOCKER_USERNAME: "\(.*\)".*/\1/')
+        if [ -z "$DOCKER_USERNAME" ] || [ "$DOCKER_USERNAME" = "your-username" ]; then
+            echo "Error: DOCKER_USERNAME not set in environment or image-config.yaml"
+            echo "Please set DOCKER_USERNAME environment variable or update k8s/image-config.yaml"
+            exit 1
+        fi
+        echo "Using DOCKER_USERNAME from image-config.yaml: $DOCKER_USERNAME"
+    fi
+fi
 
 echo "Deploying Simple Bank Application..."
 echo "Environment: $ENVIRONMENT"

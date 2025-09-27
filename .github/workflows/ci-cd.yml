@@ -107,6 +107,13 @@ jobs:
       with:
         version: 'latest'
 
+    - name: Update image configuration with Docker username
+      run: |
+        # Update the image-config.yaml with the DOCKER_USERNAME from environment
+        sed -i "s/DOCKER_USERNAME: \".*\"/DOCKER_USERNAME: \"${{ env.DOCKER_USERNAME }}\"/" k8s/image-config.yaml
+        echo "Updated image-config.yaml with DOCKER_USERNAME: ${{ env.DOCKER_USERNAME }}"
+        cat k8s/image-config.yaml
+
     - name: Configure kubectl
       run: |
         echo "=== Decoding and validating kubeconfig ==="
@@ -159,6 +166,10 @@ jobs:
         # Set Docker image name using GitHub environment variables
         DOCKER_IMAGE_NAME="${{ env.REGISTRY }}/${{ vars.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.ref_name == 'main' && 'latest' || 'develop' }}"
         echo "Using Docker image: $DOCKER_IMAGE_NAME"
+        
+        # Deploy using the deployment script with environment variable
+        export DOCKER_USERNAME="${{ vars.DOCKER_USERNAME }}"
+        ./scripts/deploy.sh base ${{ github.ref_name == 'main' && 'latest' || 'develop' }}
         
         # Create namespace if it doesn't exist
         kubectl create namespace simple-bank --dry-run=client -o yaml | kubectl apply --validate=false -f -

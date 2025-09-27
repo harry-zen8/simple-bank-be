@@ -4,7 +4,7 @@ metadata:
   name: simple-bank-config
   namespace: simple-bank
 data:
-  SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres-service:5432/banking_db"
+  SPRING_DATASOURCE_URL: "jdbc:postgresql://host.docker.internal:5432/banking_db"
   SPRING_DATASOURCE_USERNAME: "user"
   SPRING_JPA_HIBERNATE_DDL_AUTO: "none"
   SPRING_JPA_SHOW_SQL: "true"

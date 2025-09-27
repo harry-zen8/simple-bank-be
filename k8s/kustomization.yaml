@@ -6,11 +6,8 @@ namespace: simple-bank
 resources:
 - namespace.yaml
 - configmap.yaml
-- liquibase-configmap.yaml
 - secret.yaml
 - image-config.yaml
-- postgres-deployment.yaml
-- postgres-service.yaml
 - deployment.yaml
 - service.yaml
 - ingress.yaml

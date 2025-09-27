@@ -7,7 +7,7 @@ metadata:
   name: image-config
   namespace: simple-bank
 data:
-  # Docker Hub username - UPDATE THIS
+  # Docker Hub username - This will be updated by GitHub Actions
   DOCKER_USERNAME: "your-username"
   
   # Image name (without username)
